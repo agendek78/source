@@ -268,6 +268,9 @@ get_status_led() {
 	zbgw)
 		status_led="mediatek:green:status"
 		;;
+	zbgw)
+		status_led="mediatek:green:status"
+		;;
 	w306r-v20|\
 	witi|\
 	zbt-wr8305rt)
