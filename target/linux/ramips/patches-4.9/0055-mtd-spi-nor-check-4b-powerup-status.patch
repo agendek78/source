@@ -1,0 +1,76 @@
+diff -ru a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+--- a/drivers/mtd/spi-nor/spi-nor.c	2017-11-27 22:12:12.844009000 +0100
++++ b/drivers/mtd/spi-nor/spi-nor.c	2017-11-27 22:08:36.976009000 +0100
+@@ -115,6 +115,25 @@
+ }
+ 
+ /*
++ * Read the status register, returning its value in the location
++ * Return the status register value.
++ * Returns negative if error occurred.
++ */
++static int read_sr3(struct spi_nor *nor)
++{
++	int ret;
++	u8 val;
++
++	ret = nor->read_reg(nor, SPINOR_OP_RDSR3, &val, 1);
++	if (ret < 0) {
++		pr_err("error %d reading SR\n", (int) ret);
++		return ret;
++	}
++
++	return val;
++}
++
++/*
+  * Read the flag status register, returning its value in the location
+  * Return the status register value.
+  * Returns negative if error occurred.
+@@ -1862,7 +1881,21 @@
+ 		/* enable 4-byte addressing if the device exceeds 16MiB */
+ 		nor->addr_width = 4;
+ 		if (info->flags & SPI_NOR_4B_READ_OP)
+-			spi_nor_set_4byte_read(nor, info);
++		{	
++			if ((JEDEC_MFR(info) == SNOR_MFR_WINBOND) &&
++				(read_sr3(nor) & SR_ADP) != 0)
++			{
++				/* 4B adressing enabled at power up,
++				 * so do not exit 4B mode and configure
++				 * appropriate i/o functions
++				 */
++				set_4byte(nor, info, 1);
++			}
++			else
++			{
++				spi_nor_set_4byte_read(nor, info);
++			}
++		}
+ 		else if (JEDEC_MFR(info) == SNOR_MFR_SPANSION ||
+ 			 info->flags & SPI_NOR_4B_OPCODES)
+ 			spi_nor_set_4byte_opcodes(nor, info);
+diff -ru a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+--- a/include/linux/mtd/spi-nor.h	2017-11-27 22:12:12.844009000 +0100
++++ b/include/linux/mtd/spi-nor.h	2017-11-27 22:08:40.700009000 +0100
+@@ -59,6 +59,8 @@
+ #define SPINOR_OP_RDCR		0x35	/* Read configuration register */
+ #define SPINOR_OP_RDFSR		0x70	/* Read flag status register */
+ 
++#define SPINOR_OP_RDSR3		0x15	/* Read status register 3*/
++
+ /* 4-byte address opcodes - used on Spansion and some Macronix flashes. */
+ #define SPINOR_OP_READ_4B	0x13	/* Read data bytes (low frequency) */
+ #define SPINOR_OP_READ_FAST_4B	0x0c	/* Read data bytes (high frequency) */
+@@ -109,6 +111,11 @@
+ #define SR_TB			BIT(5)	/* Top/Bottom protect */
+ #define SR_SRWD			BIT(7)	/* SR write protect */
+ 
++/* SR3 bits meaning for Windbond flash */
++#define SR_ADS			BIT(0)	/* current address mode */
++#define SR_ADP			BIT(1) 	/* power up address mode */
++#define SR_WBWP			BIT(2)	/* write protect selection */
++
+ #define SR_QUAD_EN_MX		BIT(6)	/* Macronix Quad I/O */
+ 
+ /* Enhanced Volatile Configuration Register bits */
