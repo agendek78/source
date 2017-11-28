@@ -50,6 +50,16 @@ define Device/LinkIt7688
 endef
 TARGET_DEVICES += LinkIt7688
 
+define Device/ZBGW-IoT
+  DTS := ZBGW-IoT
+  IMAGE_SIZE := $(ralink_default_fw_size_32M)
+  SUPPORTED_DEVICES := linkits7688 linkits7688d
+  DEVICE_TITLE := ZigBee Gateway IoT 7688
+  DEVICE_PACKAGES:= kmod-usb2 kmod-usb-ohci uboot-envtools \
+		kmod-sdhci-mt7620
+endef
+TARGET_DEVICES += ZBGW-IoT
+
 define Device/mac1200r-v2
   DTS := MAC1200RV2
   DEVICE_TITLE := Mercury MAC1200R v2.0

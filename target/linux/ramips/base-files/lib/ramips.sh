@@ -676,6 +676,9 @@ ramips_board_detect() {
 	*"Y1S")
 		name="y1s"
 		;;
+	*"ZigBee Gateway IoT 7688")
+		name="zbgw"
+		;;
 	*"ZBT-APE522II")
 		name="zbt-ape522ii"
 		;;

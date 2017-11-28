@@ -201,6 +201,7 @@ platform_check_image() {
 	y1|\
 	y1s|\
 	we1026-5g-16m|\
+	zbgw|\
 	zbt-ape522ii|\
 	zbt-cpe102|\
 	zbt-wa05|\
