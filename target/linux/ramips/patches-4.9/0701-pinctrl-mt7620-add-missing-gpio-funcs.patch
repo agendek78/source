@@ -1,0 +1,46 @@
+--- a/arch/mips/ralink/mt7620.c	2017-12-23 16:05:09.685008999 +0100
++++ b/arch/mips/ralink/mt7620.c	2017-12-23 15:54:42.000000000 +0100
+@@ -145,9 +145,27 @@
+ 	FUNC("i2c", 0, 4, 2),
+ };
+ 
+-static struct rt2880_pmx_func refclk_grp_mt7628[] = { FUNC("refclk", 0, 37, 1) };
+-static struct rt2880_pmx_func perst_grp_mt7628[] = { FUNC("perst", 0, 36, 1) };
+-static struct rt2880_pmx_func wdt_grp_mt7628[] = { FUNC("wdt", 0, 38, 1) };
++static struct rt2880_pmx_func refclk_grp_mt7628[] = { 
++	FUNC("-", 3, 37, 1),
++	FUNC("-", 2, 37, 1),
++	FUNC("gpio", 1, 37, 1), 
++	FUNC("refclk", 0, 37, 1) 
++};
++
++static struct rt2880_pmx_func perst_grp_mt7628[] = { 
++	FUNC("-", 3, 36, 1),
++	FUNC("-", 2, 36, 1),
++	FUNC("gpio", 1, 36, 1), 
++	FUNC("perst", 0, 36, 1) 
++};
++
++static struct rt2880_pmx_func wdt_grp_mt7628[] = { 
++	FUNC("-", 3, 38, 1),
++	FUNC("-", 2, 38, 1),
++	FUNC("gpio", 1, 38, 1),
++	FUNC("wdt", 0, 38, 1)  
++};
++
+ static struct rt2880_pmx_func spi_grp_mt7628[] = { FUNC("spi", 0, 7, 4) };
+ 
+ static struct rt2880_pmx_func sd_mode_grp_mt7628[] = {
+@@ -317,9 +335,9 @@
+ 				1, MT7628_GPIO_MODE_UART1),
+ 	GRP_G("i2c", i2c_grp_mt7628, MT7628_GPIO_MODE_MASK,
+ 				1, MT7628_GPIO_MODE_I2C),
+-	GRP("refclk", refclk_grp_mt7628, 1, MT7628_GPIO_MODE_REFCLK),
+-	GRP("perst", perst_grp_mt7628, 1, MT7628_GPIO_MODE_PERST),
+-	GRP("wdt", wdt_grp_mt7628, 1, MT7628_GPIO_MODE_WDT),
++	GRP_G("refclk", refclk_grp_mt7628, MT7628_GPIO_MODE_MASK, 1, MT7628_GPIO_MODE_REFCLK),
++	GRP_G("perst", perst_grp_mt7628, MT7628_GPIO_MODE_MASK, 1, MT7628_GPIO_MODE_PERST),
++	GRP_G("wdt", wdt_grp_mt7628, MT7628_GPIO_MODE_MASK, 1, MT7628_GPIO_MODE_WDT),
+ 	GRP("spi", spi_grp_mt7628, 1, MT7628_GPIO_MODE_SPI),
+ 	GRP_G("sdmode", sd_mode_grp_mt7628, MT7628_GPIO_MODE_MASK,
+ 				1, MT7628_GPIO_MODE_SDMODE),
