@@ -20,6 +20,65 @@
 		status = "okay";
 	};
 
+	gpio-export {
+		compatible = "gpio-export";
+		#size-cells = <0>;
+
+		rel1 {
+			gpio-export,name = "rel1";
+			gpio-export,output = <0>;
+			gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+		};
+		
+		rel2 {
+			gpio-export,name = "rel2";
+			gpio-export,output = <0>;
+			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+		};		
+		
+		cc2538-reset {
+			gpio-export,name = "cc2538-reset";
+			gpio-export,output = <1>;
+			gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+		};
+		
+		cc2538-boot {
+			gpio-export,name = "cc2538-boot";
+			gpio-export,output = <1>;
+			gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+		};
+		
+		gpio1 {
+			gpio-export,name = "gpio1";
+			gpio-export,direction_may_change = <1>;
+			gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+		};
+		
+		gpio2 {
+			gpio-export,name = "gpio2";
+			gpio-export,direction_may_change = <1>;
+			gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+		};
+		
+		gpio3 {
+			gpio-export,name = "gpio3";
+			gpio-export,direction_may_change = <1>;
+			gpios = <&gpio0 3 GPIO_ACTIVE_HIGH>;
+		};
+		
+		gpio11 {
+			gpio-export,name = "gpio11";
+			gpio-export,direction_may_change = <1>;
+			gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+		};
+
+		gpio37 {
+			gpio-export,name = "gpio37";
+			gpio-export,direction_may_change = <1>;
+			gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+		};		
+	};
+
 	gpio-leds {
 		compatible = "gpio-leds";
 
@@ -38,7 +97,7 @@
 
 		wps {
 			label = "reset";
-			gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_WPS_BUTTON>;
 		};
 	};
@@ -148,6 +207,13 @@
 
 &i2c {
 	status = "okay";
+	
+	pressure@77 {
+		compatible = "bosch,bmp280";
+		reg = <0x77>;
+		temp-measurement-period = <500>;
+		default-oversampling = <2>;		
+	};
 };
 
 &uart1 {
